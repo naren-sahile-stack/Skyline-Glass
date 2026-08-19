@@ -85,4 +85,71 @@
       bidForm.reset();
     });
   }
+  // ===== SEARCH FUNCTIONALITY =====
+var searchToggle = document.getElementById('searchToggle');
+var searchOverlay = document.getElementById('searchOverlay');
+var searchClose = document.getElementById('searchClose');
+var searchInput = document.getElementById('searchInput');
+var searchForm = document.getElementById('searchForm');
+var suggestTags = document.querySelectorAll('.suggest-tags span');
+
+// Open search
+if (searchToggle) {
+  searchToggle.addEventListener('click', function () {
+    searchOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function () {
+      searchInput.focus();
+    }, 200);
+  });
+}
+
+// Close search
+function closeSearch() {
+  searchOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+  searchInput.value = '';
+}
+
+if (searchClose) {
+  searchClose.addEventListener('click', closeSearch);
+}
+
+// Close on ESC key
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
+    closeSearch();
+  }
+});
+
+// Close on overlay click (outside modal)
+if (searchOverlay) {
+  searchOverlay.addEventListener('click', function (e) {
+    if (e.target === searchOverlay) {
+      closeSearch();
+    }
+  });
+}
+
+// Handle search form submit
+if (searchForm) {
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var query = searchInput.value.trim();
+    if (query.length > 0) {
+      window.open('https://www.google.com/search?q=site:skg23.com+' + encodeURIComponent(query), '_blank');
+      closeSearch();
+    }
+  });
+}
+
+// Click on suggestion tags
+if (suggestTags) {
+  suggestTags.forEach(function (tag) {
+    tag.addEventListener('click', function () {
+      searchInput.value = this.textContent;
+      searchForm.dispatchEvent(new Event('submit'));
+    });
+  });
+}
 })();
